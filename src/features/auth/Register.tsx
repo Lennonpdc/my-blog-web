@@ -1,10 +1,13 @@
 import { useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { registerUser } from './authSlice';
+import { useNavigate } from 'react-router-dom';
 
 const Register = () => {
 
     const dispatch = useAppDispatch();
+    const navigate = useNavigate();
+    const [isLoading, setIsLoading] = useState(false)
 
     // 1. Local state to track what the user types
     const [formData, setFormData] = useState({
@@ -24,10 +27,20 @@ const Register = () => {
         });
     };
 
-    const handleRegister = (e: React.FormEvent) => {
+    const handleRegister = async (e: React.FormEvent) => {
         e.preventDefault();
-        // 3. Dispatch the AsyncThunk from authSlice
-        dispatch(registerUser(formData));
+        setIsLoading(true);
+
+        try {
+            await dispatch(registerUser(formData)).unwrap();
+
+            alert("Registration Successful! Please check your email to verify your account.");
+            navigate("/login");
+        } catch (err: any) {
+            alert("Registration Failed: " + (err.message || "An error occurred"));
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     return (
@@ -39,7 +52,7 @@ const Register = () => {
                     <input
                         name="full_name"
                         type="text"
-                        className="auth-input-field" // Use the new class we discussed
+                        className="auth-input-field"
                         placeholder="e.g. Lennon"
                         onChange={handleOnChange}
                         required

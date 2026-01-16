@@ -402,6 +402,43 @@ body {
   justify-content: space-between;
 }
 
+.author-header {
+    display: flex;
+    justify-content: space-between; /* Pushes date to the right */
+    align-items: flex-start;
+    margin-bottom: 10px;
+}
+
+.author-names {
+    display: flex;
+    flex-direction: column; /* Stacks username below fullname */
+    gap: 2px;
+}
+
+.full-name {
+    font-weight: bold;
+    font-size: 1rem;
+    color: #a4a4a4;
+    line-height: 1;
+}
+
+.username {
+    font-size: 0.85rem;
+    color: #a7a2a2;
+    margin: 3px; /* Remove default p margins */
+}
+
+.post-date {
+    font-size: 0.8rem;
+    color: #999;
+    white-space: nowrap; /* Prevents date from wrapping */
+}
+
+.blog-snippet {
+    margin-top: 8px;
+    color: #444;
+}
+
 .pagination-div {
   display: flex;
   justify-content: center;

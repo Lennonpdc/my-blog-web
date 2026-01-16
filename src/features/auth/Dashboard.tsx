@@ -7,6 +7,7 @@ import { supabase } from '../../api/supabaseClient';
 
 const Dashboard = () => {
     const { user, loading } = useSelector((state: RootState) => state.auth);
+    const currentUserId = user?.id;
     const navigate = useNavigate();
     const dispatch = useDispatch<AppDispatch>();
 
@@ -91,10 +92,12 @@ const Dashboard = () => {
 
         try {
             // FAIL-SAFE: Get session directly from Supabase
-            // This prevents the "blogger_id is null" error after a refresh
             const { data: { session } } = await supabase.auth.getSession();
             const currentUserId = session?.user?.id;
+            const fullName = user?.full_name || user?.fullName || "Anonymous";
+            const username = user?.username || "user";
 
+            console.log("Debug Auth Data:", user?.user_metadata);
             if (!currentUserId) {
                 alert("Your session has expired. Please log in again.");
                 navigate('/login');
@@ -104,7 +107,7 @@ const Dashboard = () => {
             // Upload Image to Supabase Storage
             const fileExt = file.name.split('.').pop();
             const fileName = `${Math.random()}.${fileExt}`;
-            const filePath = `${currentUserId}/${fileName}`; // Use the ID we just fetched
+            const filePath = `${currentUserId}/${fileName}`;
 
             const { error: uploadError } = await supabase.storage
                 .from('blogs-bucket')
@@ -124,7 +127,9 @@ const Dashboard = () => {
                     title: newBlog.title,
                     content: newBlog.content,
                     image_url: publicUrl,
-                    blogger_id: currentUserId, // Use the verified currentUserId
+                    blogger_id: currentUserId,
+                    author_name: fullName,
+                    author_username: username,
                     inserted_at: new Date().toISOString()
                 }]);
 
@@ -218,7 +223,7 @@ const Dashboard = () => {
         try {
             const { error } = await supabase
                 .from('blogs')
-                .update({ is_deleted: true }) // Simply mark it as deleted
+                .update({ is_deleted: true })
                 .eq('id', id);
 
             if (error) throw error;
@@ -281,8 +286,19 @@ const Dashboard = () => {
 
                             <div className="blog-card-content">
                                 <div onClick={() => handleViewPost(blog)} style={{ cursor: 'pointer' }}>
+                                    <div className="author-header">
+                                        <div className="author-names">
+                                            <span className="full-name">{blog.author_name || "Anonymous"}</span>
+                                            <p className="username">@{blog.author_username || "user"}</p>
+                                        </div>
+                                        <span className="post-date">
+                                            {new Date(blog.inserted_at).toLocaleDateString()}
+                                        </span>
+                                    </div>
+
                                     <h3>{blog.title.length > 30 ? blog.title.substring(0, 30) + "..." : blog.title}</h3>
-                                    <p>
+
+                                    <p className="blog-snippet">
                                         {blog.content.length > 60 ? blog.content.substring(0, 60) + "..." : blog.content}
                                     </p>
                                 </div>
@@ -291,17 +307,21 @@ const Dashboard = () => {
                                     <button className="btn-view" onClick={() => handleViewPost(blog)}>
                                         View Blog
                                     </button>
-                                    <div className="admin-actions">
-                                        <button className="btn-secondary" onClick={() => {
-                                            setEditingId(blog.id);
-                                            setNewBlog({ title: blog.title, content: blog.content });
-                                            setOldImageUrl(blog.image_url);
-                                            setIsModalOpen(true);
-                                        }}>
-                                            Edit
-                                        </button>
-                                        <button className="btn-danger-sm" onClick={() => handleDeletePost(blog.id)}>Delete</button>
-                                    </div>
+                                    {blog.blogger_id === currentUserId && (
+                                        <div className="admin-actions">
+                                            <button className="btn-secondary" onClick={() => {
+                                                setEditingId(blog.id);
+                                                setNewBlog({ title: blog.title, content: blog.content });
+                                                setOldImageUrl(blog.image_url);
+                                                setIsModalOpen(true);
+                                            }}>
+                                                Edit
+                                            </button>
+                                            <button className="btn-danger-sm" onClick={() => handleDeletePost(blog.id)}>
+                                                Delete
+                                            </button>
+                                        </div>
+                                    )}
                                 </div>
                             </div>
                         </div>
@@ -346,16 +366,6 @@ const Dashboard = () => {
                                 <button className="btn-secondary" onClick={() => { setIsModalOpen(false); setEditingId(null); }}>
                                     Cancel
                                 </button>
-                                {/* <button className="btn-primary" disabled={isSubmitting}
-                                    onClick={() => editingId ? handleUpdateBlog(editingId, oldImageUrl) : handlePostBlog()}>
-                                    {isSubmitting ? (
-                                        <span className="loader-container">
-                                            <div className="spinner"></div> Posting...
-                                        </span>
-                                    ) : (
-                                        editingId ? "Save Changes" : "Publish Post"
-                                    )}
-                                </button> */}
                                 <button
                                     className="btn-primary"
                                     disabled={isSubmitting}
