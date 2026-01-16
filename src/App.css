@@ -1,42 +1,565 @@
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
 #root {
-  max-width: 1280px;
-  margin: 0 auto;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #f0f2f5;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+}
+
+.auth-page-wrapper,
+.dashboard-container-parent {
+  min-height: 100vh;
+  width: 100vw;
+  background: linear-gradient(135deg, #0a225b 0%, #1e293b 100%);
+  margin: 0;
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+/* Specific centering for Auth Page */
+.auth-page-wrapper {
+  align-items: center;
+}
+
+.auth-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  width: 100vw;
+  background-color: #f0f2f5;
+  padding: 20px;
+}
+
+.login-card {
+  background: white;
+  padding: 2.5rem;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 450px;
+  color: #333;
+}
+
+.auth-card label,
+.auth-card h2,
+.auth-card p {
+  color: #333 !important;
+}
+
+.input-group input {
+  width: 100%;
+  padding: 12px;
+  margin-top: 5px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  background: white;
+  color: black;
+}
+
+.auth-title {
+  color: #000;
+  margin-bottom: 1rem;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-bottom: 15px;
+  text-align: left;
+}
+
+.input-group label {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.auth-input,
+.form-input,
+.form-textarea {
+  width: 100%;
+  font-family: inherit;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+  color: #333;
+  background-color: white;
+}
+
+.auth-input-field {
+  font-family: inherit;
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+  color: #333;
+  background-color: white;
+}
+
+.register-modal-card {
+  background: white;
   padding: 2rem;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 700px;
+  color: #333;
+}
+
+.form-textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+.error-text {
+  color: #dc3545;
+  font-size: 0.85rem;
+  margin-top: 10px;
+}
+
+/* Style the File Input Wrapper */
+.file-input-container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 10px 0;
+}
+
+.file-input {
+  font-size: 0.9rem;
+  color: #666;
+}
+
+/* 'Choose File' button place holder*/
+.file-input::-webkit-file-upload-button {
+  background: #0a225b;
+  font-family: inherit;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  padding: 8px 16px;
+  cursor: pointer;
+  margin-right: 10px;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+
+.file-input::-webkit-file-upload-button:hover {
+  background: #007bff;
+}
+
+/* CSS For dashboard, modal, and buttons */
+.profile-card {
+  background: #f9f9f9;
+  border: 1px solid #eee;
+  padding: 1.5rem;
+  border-radius: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Button Styling */
+.btn-primary {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background 0.3s;
+}
+
+.btn-primary:hover {
+  background-color: #0056b3;
+}
+
+.btn-primary:disabled {
+    background-color: #94a3b8;
+    cursor: not-allowed;
+    transform: none !important;
+}
+
+.btn-secondary {
+  background-color: #6c757d;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.btn-danger {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.loader-container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* The actual spinning circle */
+.spinner {
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top: 2px solid white;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Modal Specific Alignment */
+.modal-overlay {
+  position: fixed !important;
+  /* Force it */
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 99999;
+}
+
+/* Close button inside the modal */
+.close-btn {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  color: #999;
+  font-weight: bold;
+}
+
+.close-btn:hover {
+  color: #333;
+}
+
+.modal-content {
+  background: white;
+  padding: 30px;
+  border-radius: 12px;
+  position: relative;
+  width: 100%;
+  max-width: 500px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+/* Dashboard CSS */
+.dashboard-page-wrapper {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+  padding: 2rem;
+  color: white;
+}
+
+/* Main content container */
+.dashboard-container {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+/* Header Styling */
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.header-info h1 {
+  margin: 0;
+  font-size: 2rem;
+}
+
+.user-details {
+  margin-top: 8px;
+}
+
+.full-name {
+  display: block;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #f8fafc;
+}
+
+.username {
+  font-size: 0.9rem;
+  color: #94a3b8;
+  margin: 2px 0 0 0;
+}
+
+/* Blog Grid */
+.blog-list {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+  margin-top: 2rem;
+  width: 100%;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+@media (max-width: 768px) {
+  .blog-list {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* The Card */
+.blog-card {
+  background: rgba(153, 167, 203, 0.445);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 15px;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.3s ease;
+  width: 100%;
+  max-width: 600px;
+  min-height: 500px;
+}
+
+.blog-card img {
+  width: 100%;
+  max-height: 250px;
+  object-fit: cover;
+  border-radius: 12px;
+  border: 1px solid #efefef;
+  margin-bottom: 15px;
+}
+
+.blog-card:hover {
+  transform: translateY(-5px);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.blog-card h3 {
+  margin: 1rem 0 0.5rem;
+  font-size: 1.4rem;
+}
+
+.blog-card p {
+  color: #cbd5e1;
+  line-height: 1.5;
+  flex-grow: 1;
+}
+
+.blog-content-area {
+  padding: 30px;
+  width: 60%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.pagination-div {
+  display: flex;
+  justify-content: center;
+  margin-top: 25px;
+  gap: 10px;
+}
+
+/* Primary View Button */
+.btn-view {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-view:hover {
+  background-color: #0056b3;
+}
+
+/* Smaller Admin Buttons */
+.btn-secondary-sm,
+.btn-danger-sm {
+  padding: 6px 12px;
+  font-size: 0.85rem;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.card-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: auto;
+  padding-top: 15px;
+  border-top: 1px solid #eee;
+}
+
+.admin-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.card-image-wrapper {
+  position: relative;
+  cursor: pointer;
+}
+
+.image-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4);
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  transition: opacity 0.3s;
+  font-weight: bold;
+}
+
+.card-image-wrapper:hover .image-overlay {
+  opacity: 1;
+  border-radius: 15px;
+}
+
+/* Blog post viewer */
+.view-modal {
+  width: 1000px;
+  height: 600px;
+  max-width: 95vw;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  overflow: hidden;
+}
+
+.view-modal-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 30px;
+  scrollbar-width: thin;
+}
+
+.view-modal-body::-webkit-scrollbar {
+  width: 8px;
+}
+
+.view-modal-body::-webkit-scrollbar-thumb {
+  background: #cbd5e1c7;
+  border-radius: 10px;
+}
+
+.view-modal-img {
+  width: 100%;
+  max-height: 400px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.view-modal-title {
+  font-size: 2rem;
+  margin-bottom: 15px;
+  color: #1e293b;
+}
+
+.view-modal-content {
+  font-size: 1.1rem;
+  line-height: 1.8;
+  color: #334155;
+  white-space: pre-wrap;
+}
+
+/* Footer Styles */
+.dashboard-footer {
+  margin-top: 60px;
+  padding: 40px 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
   text-align: center;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+.footer-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.footer-email {
+  color: #94a3b8;
+  font-family: monospace;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+.footer-links {
+  display: flex;
+  gap: 25px;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
-.card {
-  padding: 2em;
+.footer-links a {
+  color: white;
+  text-decoration: none;
+  font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: color 0.2s;
 }
 
-.read-the-docs {
-  color: #888;
+.footer-links a:hover {
+  color: #38bdf8;
 }
