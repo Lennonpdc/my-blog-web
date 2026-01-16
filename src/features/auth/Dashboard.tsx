@@ -33,27 +33,25 @@ const Dashboard = () => {
 
     useEffect(() => {
         const initializeDashboard = async () => {
-            // 1. Check if we have a session in Supabase first
+            // Check if we have a session in Supabase first
             const { data: { session } } = await supabase.auth.getSession();
 
             if (!session) {
-                // Only navigate away if Supabase confirms there is NO session
                 navigate('/login');
                 return;
             }
 
-            // 2. If we have a session but Redux doesn't have the profile yet
+            // If we have a session but Redux doesn't have the profile yet
             if (session.user && !user?.username) {
                 dispatch(fetchUserProfile(session.user.id));
             }
 
-            // 3. Fetch the blogs
+            // Fetch the blogs
             fetchBlogs();
         };
 
         initializeDashboard();
     }, [page, user?.username, navigate, dispatch]);
-    // Note: We check user?.username specifically to prevent infinite loops
 
 
     const fetchBlogs = async () => {
@@ -71,8 +69,6 @@ const Dashboard = () => {
             console.error("Error fetching blogs:", error.message);
         } else {
             setBlogs(data || []);
-            // Optional: Save 'count' to a state if you want to disable the 'Next' button 
-            // accurately based on total items in DB
             setTotalCount(count || 0);
         }
     };

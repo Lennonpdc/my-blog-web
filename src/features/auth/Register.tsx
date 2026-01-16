@@ -18,7 +18,7 @@ const Register = () => {
     });
 
     // 2. Get the loading/error state from Redux
-    const { loading, error } = useAppSelector((state) => state.auth);
+    const { error } = useAppSelector((state) => state.auth);
 
     const handleOnChange = (e: any) => {
         setFormData({
@@ -34,7 +34,7 @@ const Register = () => {
         try {
             await dispatch(registerUser(formData)).unwrap();
 
-            alert("Registration Successful! Please check your email to verify your account.");
+            alert("Registration Successful!");
             navigate("/login");
         } catch (err: any) {
             alert("Registration Failed: " + (err.message || "An error occurred"));
@@ -95,8 +95,8 @@ const Register = () => {
                     />
                 </div>
 
-                <button className="btn-primary" type="submit" disabled={loading} style={{ width: '100%', marginTop: '20px' }}>
-                    {loading ? 'Creating Account...' : 'Register'}
+                <button className="btn-primary" type="submit" disabled={isLoading} style={{ width: '100%', marginTop: '20px' }}>
+                    {isLoading ? 'Creating Account...' : 'Register'}
                 </button>
             </form>
 
